@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import Weather from "./Weather";
-import ActionModal from "./ActionModal";
-import axios from "axios";
+import React, { Component } from 'react';
+import Weather from './Weather';
+import ActionModal from './ActionModal';
+import axios from 'axios';
 
 class App extends Component {
   state = {
-    location: "Tagbilaran City",
+    location: 'Tagbilaran City',
     city: undefined,
     country: undefined,
     description: undefined,
@@ -16,8 +16,8 @@ class App extends Component {
     wind: undefined,
     pressure: undefined,
     show: false,
-    error: "",
-    bgColor: ""
+    error: '',
+    bgColor: ''
   };
 
   componentDidMount() {
@@ -43,7 +43,7 @@ class App extends Component {
       })
       .catch(err => {
         if (err.response.status === 404) {
-          this.setState({ error: "City not Found" });
+          this.setState({ error: 'City not Found' });
         }
       });
   }
@@ -52,7 +52,7 @@ class App extends Component {
     const { bgColor } = this.state;
 
     if (prevProps.bgColor !== bgColor) {
-      const bodyElt = document.querySelector("body");
+      const bodyElt = document.querySelector('body');
       bodyElt.style.background = `url(${bgColor}) no-repeat center center fixed`;
     }
   }
@@ -77,73 +77,78 @@ class App extends Component {
 
   handleChangeLocation = e => {
     e.preventDefault();
-    axios
-      .get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${
-          this.state.location
-        }
+    const location = this.state.location;
+    if (location === '') {
+      this.setState({ error: 'Fields must not be empty' });
+    } else {
+      axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${
+            this.state.location
+          }
           &appid=2297341e552a6cf9736f3ab3d19248c3&units=metric`
-      )
-      .then(res => {
-        console.log(res.data);
-        this.setState({
-          city: res.data.name,
-          country: res.data.sys.country,
-          description: res.data.weather[0].main,
-          temp: res.data.main.temp,
-          icon: res.data.weather[0].icon,
-          humidity: res.data.main.humidity,
-          wind: res.data.wind.speed,
-          cloudiness: res.data.weather[0].description,
-          pressure: res.data.main.pressure,
-          show: false,
-          error: ""
+        )
+        .then(res => {
+          console.log(res.data);
+          this.setState({
+            city: res.data.name,
+            country: res.data.sys.country,
+            description: res.data.weather[0].main,
+            temp: res.data.main.temp,
+            icon: res.data.weather[0].icon,
+            humidity: res.data.main.humidity,
+            wind: res.data.wind.speed,
+            cloudiness: res.data.weather[0].description,
+            pressure: res.data.main.pressure,
+            show: false,
+            error: ''
+          });
+          this.setbackgroundImage();
+        })
+        .catch(err => {
+          if (err.response.status === 404) {
+            this.setState({ error: 'City not Found' });
+          }
         });
-        this.setbackgroundImage();
-      })
-      .catch(err => {
-        if (err.response.status === 404) {
-          this.setState({ error: "City not Found" });
-        }
-      });
+    }
   };
 
   setbackgroundImage = () => {
     let bgColor;
     const conditions = this.state.description;
     switch (conditions) {
-      case "Clear":
-        bgColor = "./images/clear.jpeg";
+      case 'Clear':
+        bgColor = './images/clear.jpeg';
         break;
 
-      case "Clouds":
-        bgColor = "./images/cloudy.jpeg";
+      case 'Clouds':
+        bgColor = './images/cloudy.jpeg';
         break;
 
-      case "Rain":
-      case "Drizzle":
-      case "Mist":
-      case "Smoke":
-      case "Haze":
-      case "Dust":
-      case "Fog":
-      case "Sand":
-      case "Ash":
-      case "Squall":
-      case "Tornado":
-        bgColor = "./images/rain.jpeg";
+      case 'Rain':
+      case 'Drizzle':
+      case 'Mist':
+      case 'Smoke':
+      case 'Haze':
+      case 'Dust':
+      case 'Fog':
+      case 'Sand':
+      case 'Ash':
+      case 'Squall':
+      case 'Tornado':
+        bgColor = './images/rain.jpeg';
         break;
 
-      case "Thunderstorm":
-        bgColor = "./images/storm.jpeg";
+      case 'Thunderstorm':
+        bgColor = './images/storm.jpeg';
         break;
 
-      case "Snow":
-        bgColor = "./images/snow.jpeg";
+      case 'Snow':
+        bgColor = './images/snow.jpeg';
         break;
 
       default:
-        bgColor = "./images/water-blue-ocean.jpg";
+        bgColor = './images/water-blue-ocean.jpg';
     }
 
     this.setState({
