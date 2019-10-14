@@ -5,7 +5,6 @@
 
 
 ### Screenshot
-![light theme](https://github.com/foxching/weather/blob/master/public/images/screenshot/weather1.png)
 ![light theme](https://github.com/foxching/weather/blob/master/public/images/screenshot/weather2.png)
 
 
@@ -14,7 +13,7 @@
 Install all the dependencies
 
 ```sh
-$ yarn create react-app my-app
+$ yarn install
 ```
 
 ### Serve
