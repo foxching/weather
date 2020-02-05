@@ -1,165 +1,149 @@
-import React, { Component } from 'react';
-import Weather from './Weather';
-import ActionModal from './ActionModal';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import Weather from "./Weather";
+import ActionModal from "./ActionModal";
+import axios from "axios";
 
-class App extends Component {
-	state = {
-		location: 'Tagbilaran City',
-		city: undefined,
-		country: undefined,
-		description: undefined,
-		temp: undefined,
-		icon: undefined,
-		humidity: undefined,
-		cloudiness: undefined,
-		wind: undefined,
-		pressure: undefined,
-		show: false,
-		error: '',
-		bgColor: ''
-	};
+function App() {
+  const [weather, setWeather] = useState({
+    location: "Tagbilaran City",
+    city: undefined,
+    country: undefined,
+    description: undefined,
+    temp: undefined,
+    icon: undefined,
+    humidity: undefined,
+    cloudiness: undefined,
+    wind: undefined,
+    pressure: undefined
+  });
+  const [loc, setLoc] = useState("Tagbilaran City");
+  const [show, setShow] = useState(false);
+  const [error, setError] = useState("");
+  const [bgColor, setBgColor] = useState("");
 
-	componentDidMount() {
-		this.getWeather(this.state.location);
-	}
+  useEffect(() => {
+    const bodyElt = document.querySelector("body");
+    bodyElt.style.background = `url(${bgColor}) no-repeat center center fixed`;
 
-	componentDidUpdate(prevProps, prevState) {
-		const { bgColor } = this.state;
+    const getWeather = () => {
+      if (loc === "") {
+        setError("Field must not be empty");
+      } else {
+        axios
+          .get(
+            `https://api.openweathermap.org/data/2.5/weather?q=${loc}
+            
+            &appid=2297341e552a6cf9736f3ab3d19248c3&units=metric`
+          )
+          .then(res => {
+            //console.log(res.data);
+            setWeather({
+              city: res.data.name,
+              country: res.data.sys.country,
+              description: res.data.weather[0].main,
+              temp: res.data.main.temp,
+              icon: res.data.weather[0].icon,
+              humidity: res.data.main.humidity,
+              wind: res.data.wind.speed,
+              cloudiness: res.data.weather[0].description,
+              pressure: res.data.main.pressure
+            });
+            setShow(false);
+            setError("");
+          })
+          .catch(err => {
+            if (err.response.status === 404) {
+              setError("City not Found");
+            }
+          });
+      }
+    };
+    getWeather();
 
-		if (prevProps.bgColor !== prevState.bgColor) {
-			const bodyElt = document.querySelector('body');
-			bodyElt.style.background = `url(${bgColor}) no-repeat center center fixed`;
-		}
-	}
+    const setbackgroundImage = () => {
+      let color;
+      const conditions = weather.description;
+      console.log(conditions);
+      switch (conditions) {
+        case "Clear":
+          color = "./images/clear.jpeg";
+          break;
 
-	handleShow = () => {
-		this.setState({
-			show: true
-		});
-	};
+        case "Clouds":
+          color = "./images/cloudy.jpeg";
+          break;
 
-	onHide = () => {
-		this.setState({
-			show: false
-		});
-	};
+        case "Rain":
+        case "Drizzle":
+        case "Mist":
+        case "Smoke":
+        case "Haze":
+        case "Dust":
+        case "Fog":
+        case "Sand":
+        case "Ash":
+        case "Squall":
+        case "Tornado":
+          color = "./images/rain.jpeg";
+          break;
 
-	handleChange = (e) => {
-		this.setState({
-			location: e.target.value
-		});
-	};
+        case "Thunderstorm":
+          color = "./images/storm.jpeg";
+          break;
 
-	handleChangeLocation = (e) => {
-		e.preventDefault();
-		const location = this.state.location;
-		this.getWeather(location);
-	};
+        case "Snow":
+          color = "./images/snow.jpeg";
+          break;
 
-	getWeather = (location) => {
-		if (location === '') {
-			this.setState({ error: 'Fields must not be empty' });
-		} else {
-			axios
-				.get(
-					`https://api.openweathermap.org/data/2.5/weather?q=${location}
-          &appid=2297341e552a6cf9736f3ab3d19248c3&units=metric`
-				)
-				.then((res) => {
-					console.log(res.data);
-					this.setState({
-						city: res.data.name,
-						country: res.data.sys.country,
-						description: res.data.weather[0].main,
-						temp: res.data.main.temp,
-						icon: res.data.weather[0].icon,
-						humidity: res.data.main.humidity,
-						wind: res.data.wind.speed,
-						cloudiness: res.data.weather[0].description,
-						pressure: res.data.main.pressure,
-						show: false,
-						error: ''
-					});
-					this.setbackgroundImage();
-				})
-				.catch((err) => {
-					if (err.response.status === 404) {
-						this.setState({ error: 'City not Found' });
-					}
-				});
-		}
-	};
+        default:
+          color = "./images/water-blue-ocean.jpg";
+      }
 
-	setbackgroundImage = () => {
-		let bgColor;
-		const conditions = this.state.description;
-		switch (conditions) {
-			case 'Clear':
-				bgColor = './images/clear.jpeg';
-				break;
+      setBgColor(color);
+    };
 
-			case 'Clouds':
-				bgColor = './images/cloudy.jpeg';
-				break;
+    setbackgroundImage();
+  }, [bgColor, loc, weather.description]);
 
-			case 'Rain':
-			case 'Drizzle':
-			case 'Mist':
-			case 'Smoke':
-			case 'Haze':
-			case 'Dust':
-			case 'Fog':
-			case 'Sand':
-			case 'Ash':
-			case 'Squall':
-			case 'Tornado':
-				bgColor = './images/rain.jpeg';
-				break;
+  const handleShow = () => {
+    setShow(true);
+  };
 
-			case 'Thunderstorm':
-				bgColor = './images/storm.jpeg';
-				break;
+  const onHide = () => {
+    setShow(false);
+    setError("");
+  };
 
-			case 'Snow':
-				bgColor = './images/snow.jpeg';
-				break;
-
-			default:
-				bgColor = './images/water-blue-ocean.jpg';
-		}
-
-		this.setState({
-			bgColor
-		});
-	};
-
-	render() {
-		return (
-			<div>
-				<Weather
-					city={this.state.city}
-					country={this.state.country}
-					description={this.state.description}
-					temp={this.state.temp}
-					icon={this.state.icon}
-					humidity={this.state.humidity}
-					wind={this.state.wind}
-					cloudiness={this.state.cloudiness}
-					pressure={this.state.pressure}
-					handleShow={this.handleShow}
-				/>
-				<ActionModal
-					show={this.state.show}
-					onHide={this.onHide}
-					value={this.state.location}
-					handleChange={this.handleChange}
-					handleChangeLocation={this.handleChangeLocation}
-					error={this.state.error}
-				/>
-			</div>
-		);
-	}
+  const handleChange = value => {
+    setWeather({ ...weather, location: value });
+  };
+  const handleChangeLocation = () => {
+    setLoc(weather.location);
+  };
+  return (
+    <div>
+      <Weather
+        city={weather.city}
+        country={weather.country}
+        description={weather.description}
+        temp={weather.temp}
+        icon={weather.icon}
+        humidity={weather.humidity}
+        wind={weather.wind}
+        cloudiness={weather.cloudiness}
+        pressure={weather.pressure}
+        handleShow={handleShow}
+      />
+      <ActionModal
+        show={show}
+        onHide={onHide}
+        value={weather.location}
+        handleChange={handleChange}
+        handleChangeLocation={handleChangeLocation}
+        error={error}
+      />
+    </div>
+  );
 }
 
 export default App;
