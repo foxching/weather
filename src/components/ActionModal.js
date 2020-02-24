@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -7,7 +7,7 @@ function ActionModal({
   show,
   onHide,
   error,
-  value,
+  location,
   handleChange,
   handleChangeLocation
 }) {
@@ -27,8 +27,8 @@ function ActionModal({
               <Form.Control
                 type="text"
                 name="location"
-                value={value}
-                onChange={e => handleChange(e.target.value)}
+                value={location}
+                onChange={handleChange}
               />
             </Form.Group>
           </Form>

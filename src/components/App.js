@@ -4,8 +4,8 @@ import ActionModal from "./ActionModal";
 import axios from "axios";
 
 function App() {
+  const [location, setLocation] = useState("");
   const [weather, setWeather] = useState({
-    location: "Tagbilaran City",
     city: undefined,
     country: undefined,
     description: undefined,
@@ -36,7 +36,6 @@ function App() {
             &appid=2297341e552a6cf9736f3ab3d19248c3&units=metric`
           )
           .then(res => {
-            //console.log(res.data);
             setWeather({
               city: res.data.name,
               country: res.data.sys.country,
@@ -63,7 +62,6 @@ function App() {
     const setbackgroundImage = () => {
       let color;
       const conditions = weather.description;
-      console.log(conditions);
       switch (conditions) {
         case "Clear":
           color = "./images/clear.jpeg";
@@ -114,11 +112,12 @@ function App() {
     setError("");
   };
 
-  const handleChange = value => {
-    setWeather({ ...weather, location: value });
+  const handleChange = e => {
+    setLocation(e.target.value);
   };
+
   const handleChangeLocation = () => {
-    setLoc(weather.location);
+    setLoc(location);
   };
   return (
     <div>
@@ -137,7 +136,7 @@ function App() {
       <ActionModal
         show={show}
         onHide={onHide}
-        value={weather.location}
+        location={location}
         handleChange={handleChange}
         handleChangeLocation={handleChangeLocation}
         error={error}
