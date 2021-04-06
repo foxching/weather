@@ -13,32 +13,23 @@
 Install all the dependencies
 
 ```sh
-$ yarn install
+$ yarn install or
+$ npm install
 ```
 
 ### Serve
 To serve in the browser  
 
 ```sh
-$ yarn start
+$ yarn start or
+$ npm start
 ```
 Serve on localhost:300
 
-### Build
-Compile and build
 
-```sh
-$ yarn build
-```
 
-## More Info
+[Demo](https://chingweatherapp.netlify.app/ "Demo")
 
-### Author
-
-Rechie Lagria
-
-### Version
-1.0.1
 
 ### License
 
