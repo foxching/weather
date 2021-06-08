@@ -1,16 +1,25 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-function ActionModal({
+interface MProps {
+  show: boolean;
+  onHide: () => void;
+  location: string;
+  setLocation: React.Dispatch<React.SetStateAction<string>>;
+  handleChangeLocation: () => void;
+  error: string | undefined;
+}
+
+const ActionModal: React.FC<MProps> = ({
   show,
   onHide,
-  error,
   location,
-  handleChange,
-  handleChangeLocation
-}) {
+  setLocation,
+  handleChangeLocation,
+  error,
+}) => {
   return (
     <div>
       <Modal show={show} onHide={onHide}>
@@ -28,7 +37,7 @@ function ActionModal({
                 type="text"
                 name="location"
                 value={location}
-                onChange={handleChange}
+                onChange={(e: any) => setLocation(e.target.value)}
               />
             </Form.Group>
           </Form>
@@ -49,6 +58,6 @@ function ActionModal({
       </Modal>
     </div>
   );
-}
+};
 
 export default ActionModal;

@@ -1,20 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Lemonada&display=swap");
 body {
-  /* background-image: url('./images/water-blue-ocean.jpg'); */
   background-size: cover;
   background-repeat: no-repeat;
+  font-family: "Lemonada", sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
 .card {
-  background-color: transparent !important;
+  background-color: rgba(0, 0, 0, 0.3);
   border-color: transparent;
   background-image: none;
   box-shadow: none;
+  border-radius: 5%;
 }
 
 ul,
 li {
   background-color: transparent !important;
-  border-color: transparent;
+  border-color: none !important;
   background-image: none;
   box-shadow: none;
+}
+
+.condition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+.horizontal-line {
+  border-top: 3px solid #ffff;
+  width: 50%;
 }
